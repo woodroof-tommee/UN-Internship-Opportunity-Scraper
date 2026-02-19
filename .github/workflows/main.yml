@@ -20,22 +20,16 @@ jobs:
       - name: Install dependencies
         run: |
           pip install requests beautifulsoup4
-      
-      - name: Run Scraper
-        run: |
-          # 自动寻找 un_scraper.py 的位置并进入该目录运行
-          TARGET_FILE=$(find . -name "un_scraper.py" -print -quit)
-          TARGET_DIR=$(dirname "$TARGET_FILE")
-          cd "$TARGET_DIR"
-          python un_scraper.py
 
-      - name: Check output file
-        # 这一步是帮你检查到底生成了什么文件，方便我们下一步接 Coze
-        run: ls -R
+      - name: Run Scraper
+        # 先进入包含脚本的子文件夹，再运行程序
+        run: |
+          cd un_scraper
+          python un_scraper.py
 
       - name: Upload result as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: UN-Internship-List
-          # 只要是生成出来的 json 文件我们都抓走
-          path: "*.json"
+          # 脚本生成的文件就在 un_scraper 文件夹里
+          path: un_scraper/*.json
