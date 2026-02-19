@@ -1,0 +1,32 @@
+name: UN_Jobs_Auto_Scraper
+
+on:
+  schedule:
+    - cron: '0 1 * * *' # 每天北京时间早上9点左右自动运行
+  workflow_dispatch: # 允许你手动点击按钮运行，方便测试
+
+jobs:
+  scrape_and_save:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 
+          # 备注：如果原仓库有 requirements.txt，也可以用 pip install -r requirements.txt
+
+      - name: Run Scraper
+        run: python main.py # 注意：请确认你Fork的仓库里启动文件名是main.py还是un_scraper.py
+
+      - name: Upload result as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UN-Internship-List
+          path: results.json # 确保这跟你脚本输出的文件名一致
