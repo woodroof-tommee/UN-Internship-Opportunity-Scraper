@@ -20,10 +20,14 @@ jobs:
       - name: Install dependencies
         run: |
           pip install requests beautifulsoup4
-
+      
       - name: Run Scraper
-        # 这里改成了 un_scraper.py，确保和你的文件名一致
-        run: python un_scraper.py 
+        run: |
+          # 自动寻找 un_scraper.py 的位置并进入该目录运行
+          TARGET_FILE=$(find . -name "un_scraper.py" -print -quit)
+          TARGET_DIR=$(dirname "$TARGET_FILE")
+          cd "$TARGET_DIR"
+          python un_scraper.py
 
       - name: Check output file
         # 这一步是帮你检查到底生成了什么文件，方便我们下一步接 Coze
