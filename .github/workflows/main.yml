@@ -1,35 +1,26 @@
-name: UN_Jobs_Auto_Scraper
+name: UN Internship Scraper
 
 on:
   schedule:
-    - cron: '0 1 * * *' 
-  workflow_dispatch: 
+    - cron: '0 0 * * *'  # 每天UTC 0点运行
+  workflow_dispatch:
 
 jobs:
-  scrape_and_save:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
           pip install requests beautifulsoup4
 
-      - name: Run Scraper
-        # 先进入包含脚本的子文件夹，再运行程序
-        run: |
-          cd un_scraper
-          python un_scraper.py
-
-      - name: Upload result as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: UN-Internship-List
-          # 脚本生成的文件就在 un_scraper 文件夹里
-          path: un_scraper/*.json
+      - name: Run scraper
+        run: python UN_intern.py
